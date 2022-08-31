@@ -1,9 +1,24 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const app = express();
 
-app.get("/", (req, response) => {
-  response.send("ur definitely gay");
+mongoose
+  .connect(
+    "mongodb+srv://admin:admin@cluster0.hws3uum.mongodb.net/?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("connected okay");
+  })
+  .catch(() => {
+    console.log("not connected, error");
+  });
+
+app.use(express.json());
+
+app.post("/auth/register", (request, response) => {
+  
 });
 
 app.listen(3333, (error) => {
