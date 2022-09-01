@@ -15,11 +15,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    avatarUrl: string,
+    avatarUrl: String,
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("UserModel", UserSchema);
