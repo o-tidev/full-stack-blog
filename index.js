@@ -7,10 +7,11 @@ import { validationResult } from "express-validator";
 import { registrationValidator } from "./validations/auth.js";
 
 import UserModel from "./models/User.js";
+import checkAuth from "./utils/checkAuth.js";
 
 mongoose
   .connect(
-    "mongodb+srv://admin:admin@cluster0.hws3uum.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://admin:admin@cluster0.fle0080.mongodb.net/blog?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("connected okay");
@@ -106,9 +107,24 @@ app.post("/auth/register", registrationValidator, async (request, response) => {
   }
 });
 
-app.get("/auth/profile", (request, response) => {
+app.get("/auth/profile", checkAuth, async (request, response) => {
   try {
-  } catch (error) {}
+    const user = await UserModel.findById(request.userId);
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const { passwordHash, ...userData } = user._doc;
+
+    response.json({ userData });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      message: "No access",
+    });
+  }
 });
 
 app.listen(3333, (error) => {
