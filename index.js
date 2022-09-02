@@ -30,10 +30,10 @@ app.get("/auth/profile", checkAuth, UserController.getProfile);
 
 
 app.post("/posts", checkAuth, postCreateValidator, PostController.create);
+app.get("/posts", PostController.getAll);
+app.get("/posts/:id", PostController.getOne);
+app.delete("/posts/:id", checkAuth, PostController.remove);
 
-// app.get("/posts", PostController.getAll);
-// app.get("/posts/:id", PostController.getOne);
-// app.delete("/posts", PostController.remove);
 // app.patch("/posts", PostController.update)
 
 app.listen(3333, (error) => {
