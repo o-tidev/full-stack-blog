@@ -8,10 +8,9 @@ import {
   postCreateValidator,
 } from "./validations.js";
 
-import checkAuth from "./utils/checkAuth.js";
+import { checkAuth, handleValidationError } from "./utils/index.js";
 
-import * as UserController from "./controllers/UserController.js";
-import * as PostController from "./controllers/PostController.js";
+import { UserController, PostController } from "./controllers/index.js";
 
 mongoose
   .connect(
@@ -40,8 +39,18 @@ const upload = multer({ storage });
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-app.post("/auth/login", loginValidator, UserController.authentification);
-app.post("/auth/register", registrationValidator, UserController.registration);
+app.post(
+  "/auth/login",
+  loginValidator,
+  handleValidationError,
+  UserController.authentification
+);
+app.post(
+  "/auth/register",
+  registrationValidator,
+  handleValidationError,
+  UserController.registration
+);
 app.get("/auth/profile", checkAuth, UserController.getProfile);
 
 app.post("/upload", checkAuth, upload.single("image"), (request, response) => {
@@ -50,11 +59,23 @@ app.post("/upload", checkAuth, upload.single("image"), (request, response) => {
   });
 });
 
-app.post("/posts", checkAuth, postCreateValidator, PostController.create);
+app.post(
+  "/posts",
+  checkAuth,
+  postCreateValidator,
+  handleValidationError,
+  PostController.create
+);
 app.get("/posts", PostController.getAll);
 app.get("/posts/:id", PostController.getOne);
 app.delete("/posts/:id", checkAuth, PostController.remove);
-app.patch("/posts/:id", checkAuth, postCreateValidator, PostController.update);
+app.patch(
+  "/posts/:id",
+  checkAuth,
+  postCreateValidator,
+  handleValidationError,
+  PostController.update
+);
 
 app.listen(3333, (error) => {
   if (error) {
