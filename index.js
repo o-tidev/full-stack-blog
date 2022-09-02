@@ -2,7 +2,11 @@ import express from "express";
 
 import mongoose from "mongoose";
 
-import { registrationValidator, loginValidator, postCreateValidator } from "./validations.js";
+import {
+  registrationValidator,
+  loginValidator,
+  postCreateValidator,
+} from "./validations.js";
 
 import checkAuth from "./utils/checkAuth.js";
 
@@ -28,13 +32,12 @@ app.post("/auth/login", loginValidator, UserController.authentification);
 app.post("/auth/register", registrationValidator, UserController.registration);
 app.get("/auth/profile", checkAuth, UserController.getProfile);
 
-
 app.post("/posts", checkAuth, postCreateValidator, PostController.create);
 app.get("/posts", PostController.getAll);
 app.get("/posts/:id", PostController.getOne);
 app.delete("/posts/:id", checkAuth, PostController.remove);
 
-// app.patch("/posts", PostController.update)
+app.patch("/posts/:id", checkAuth, PostController.update);
 
 app.listen(3333, (error) => {
   if (error) {

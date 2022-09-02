@@ -105,3 +105,32 @@ export const create = async (request, response) => {
     });
   }
 };
+
+export const update = async (request, response) => {
+  try {
+    const postId = request.params.id;
+
+    await PostModel.findOneAndUpdate(
+      {
+        _id: postId,
+      },
+      {
+        title: request.body.title,
+        description: request.body.description,
+        postImage: request.body.postImage,
+        tags: request.body.tags,
+        user: request.userId,
+      }
+    );
+
+    response.json({
+      success: true,
+    });
+    
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      message: "Could not update the post",
+    });
+  }
+};
